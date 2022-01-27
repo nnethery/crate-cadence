@@ -1,5 +1,5 @@
 import NonFungibleToken from "../../contracts/NonFungibleToken.cdc"
-import KittyItems from "../../contracts/KittyItems.cdc"
+import Albums from "../../contracts/Albums.cdc"
 
 pub struct AccountItem {
   pub let itemID: UInt64
@@ -18,8 +18,8 @@ pub struct AccountItem {
 }
 
 pub fun main(address: Address, itemID: UInt64): AccountItem? {
-  if let collection = getAccount(address).getCapability<&KittyItems.Collection{NonFungibleToken.CollectionPublic, KittyItems.KittyItemsCollectionPublic}>(KittyItems.CollectionPublicPath).borrow() {
-    if let item = collection.borrowKittyItem(id: itemID) {
+  if let collection = getAccount(address).getCapability<&Albums.Collection{NonFungibleToken.CollectionPublic, Albums.AlbumsCollectionPublic}>(Albums.CollectionPublicPath).borrow() {
+    if let item = collection.borrowAlbum(id: itemID) {
       return AccountItem(itemID: itemID, typeID: item.typeID, serialNo: item.serialNo, resourceID: item.uuid, owner: address)
     }
   }

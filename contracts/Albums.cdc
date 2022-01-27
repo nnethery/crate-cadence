@@ -1,9 +1,9 @@
 import NonFungibleToken from "./NonFungibleToken.cdc"
 
-// KittyItems
-// NFT items for Kitties!
+// Albums
+// NFT items for Music Lovers
 //
-pub contract KittyItems: NonFungibleToken {
+pub contract Albums: NonFungibleToken {
 
     // Events
     //
@@ -19,12 +19,12 @@ pub contract KittyItems: NonFungibleToken {
     pub let MinterStoragePath: StoragePath
 
     // totalSupply
-    // The total number of KittyItems that have been minted
+    // The total number of Albums that have been minted
     //
     pub var totalSupply: UInt64
 
     // NFT
-    // A Kitty Item as an NFT
+    // An Album as an NFT
     //
     pub resource NFT: NonFungibleToken.INFT {
         // The token's ID
@@ -43,27 +43,27 @@ pub contract KittyItems: NonFungibleToken {
         }
     }
 
-    // This is the interface that users can cast their KittyItems Collection as
-    // to allow others to deposit KittyItems into their Collection. It also allows for reading
-    // the details of KittyItems in the Collection.
-    pub resource interface KittyItemsCollectionPublic {
+    // This is the interface that users can cast their Albums Collection as
+    // to allow others to deposit Albums into their Collection. It also allows for reading
+    // the details of Albums in the Collection.
+    pub resource interface AlbumsCollectionPublic {
         pub fun deposit(token: @NonFungibleToken.NFT)
         pub fun getIDs(): [UInt64]
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT
-        pub fun borrowKittyItem(id: UInt64): &KittyItems.NFT? {
+        pub fun borrowAlbum(id: UInt64): &Albums.NFT? {
             // If the result isn't nil, the id of the returned reference
             // should be the same as the argument to the function
             post {
                 (result == nil) || (result?.id == id):
-                    "Cannot borrow KittyItem reference: The ID of the returned reference is incorrect"
+                    "Cannot borrow Album reference: The ID of the returned reference is incorrect"
             }
         }
     }
 
     // Collection
-    // A collection of KittyItem NFTs owned by an account
+    // A collection of Album NFTs owned by an account
     //
-    pub resource Collection: KittyItemsCollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
+    pub resource Collection: AlbumsCollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
         // dictionary of NFT conforming tokens
         // NFT is a resource type with an `UInt64` ID field
         //
@@ -85,7 +85,7 @@ pub contract KittyItems: NonFungibleToken {
         // and adds the ID to the id array
         //
         pub fun deposit(token: @NonFungibleToken.NFT) {
-            let token <- token as! @KittyItems.NFT
+            let token <- token as! @Albums.NFT
 
             let id: UInt64 = token.id
 
@@ -112,15 +112,15 @@ pub contract KittyItems: NonFungibleToken {
             return &self.ownedNFTs[id] as &NonFungibleToken.NFT
         }
 
-        // borrowKittyItem
-        // Gets a reference to an NFT in the collection as a KittyItem,
+        // borrowAlbum
+        // Gets a reference to an NFT in the collection as a Album,
         // exposing all of its fields (including the typeID).
-        // This is safe as there are no functions that can be called on the KittyItem.
+        // This is safe as there are no functions that can be called on the Album.
         //
-        pub fun borrowKittyItem(id: UInt64): &KittyItems.NFT? {
+        pub fun borrowAlbum(id: UInt64): &Albums.NFT? {
             if self.ownedNFTs[id] != nil {
                 let ref = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT
-                return ref as! &KittyItems.NFT
+                return ref as! &Albums.NFT
             } else {
                 return nil
             }
@@ -156,38 +156,38 @@ pub contract KittyItems: NonFungibleToken {
 		// and deposit it in the recipients collection using their collection reference
         //
 		pub fun mintNFT(recipient: &{NonFungibleToken.CollectionPublic}, typeID: String, serialNo: String) {
-            emit Minted(id: KittyItems.totalSupply, typeID: typeID)
+            emit Minted(id: Albums.totalSupply, typeID: typeID)
 
 			// deposit it in the recipient's account using their reference
-			recipient.deposit(token: <-create KittyItems.NFT(initID: KittyItems.totalSupply, initTypeID: typeID, initSerialNo: serialNo))
+			recipient.deposit(token: <-create Albums.NFT(initID: Albums.totalSupply, initTypeID: typeID, initSerialNo: serialNo))
 
-            KittyItems.totalSupply = KittyItems.totalSupply + (1 as UInt64)
+            Albums.totalSupply = Albums.totalSupply + (1 as UInt64)
 		}
 	}
 
     // fetch
-    // Get a reference to a KittyItem from an account's Collection, if available.
-    // If an account does not have a KittyItems.Collection, panic.
+    // Get a reference to a Album from an account's Collection, if available.
+    // If an account does not have a Albums.Collection, panic.
     // If it has a collection but does not contain the itemID, return nil.
     // If it has a collection and that collection contains the itemID, return a reference to that.
     //
-    pub fun fetch(_ from: Address, itemID: UInt64): &KittyItems.NFT? {
+    pub fun fetch(_ from: Address, itemID: UInt64): &Albums.NFT? {
         let collection = getAccount(from)
-            .getCapability(KittyItems.CollectionPublicPath)!
-            .borrow<&KittyItems.Collection{KittyItems.KittyItemsCollectionPublic}>()
+            .getCapability(Albums.CollectionPublicPath)!
+            .borrow<&Albums.Collection{Albums.AlbumsCollectionPublic}>()
             ?? panic("Couldn't get collection")
-        // We trust KittyItems.Collection.borowKittyItem to get the correct itemID
+        // We trust Albums.Collection.borowAlbum to get the correct itemID
         // (it checks it before returning it).
-        return collection.borrowKittyItem(id: itemID)
+        return collection.borrowAlbum(id: itemID)
     }
 
     // initializer
     //
 	init() {
         // Set our named paths
-        self.CollectionStoragePath = /storage/kittyItemsCollection
-        self.CollectionPublicPath = /public/kittyItemsCollection
-        self.MinterStoragePath = /storage/kittyItemsMinter
+        self.CollectionStoragePath = /storage/albumsCollection
+        self.CollectionPublicPath = /public/albumsCollection
+        self.MinterStoragePath = /storage/albumsMinter
 
         // Initialize the total supply
         self.totalSupply = 0

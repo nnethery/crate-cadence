@@ -1,13 +1,13 @@
 import FungibleToken from "../../contracts/FungibleToken.cdc"
 import NonFungibleToken from "../../contracts/NonFungibleToken.cdc"
 import CrateUtilityCoin from "../../contracts/CrateUtilityCoin.cdc"
-import KittyItems from "../../contracts/KittyItems.cdc"
+import Albums from "../../contracts/Albums.cdc"
 import NFTStorefront from "../../contracts/NFTStorefront.cdc"
 
 transaction(saleOfferResourceID: UInt64, storefrontAddress: Address) {
 
     let paymentVault: @FungibleToken.Vault
-    let kittyItemsCollection: &KittyItems.Collection{NonFungibleToken.Receiver}
+    let albumsCollection: &Albums.Collection{NonFungibleToken.Receiver}
     let storefront: &NFTStorefront.Storefront{NFTStorefront.StorefrontPublic}
     let saleOffer: &NFTStorefront.SaleOffer{NFTStorefront.SaleOfferPublic}
 
@@ -29,9 +29,9 @@ transaction(saleOfferResourceID: UInt64, storefrontAddress: Address) {
         
         self.paymentVault <- mainCrateUtilityCoinVault.withdraw(amount: price)
 
-        self.kittyItemsCollection = account.borrow<&KittyItems.Collection{NonFungibleToken.Receiver}>(
-            from: KittyItems.CollectionStoragePath
-        ) ?? panic("Cannot borrow KittyItems collection receiver from account")
+        self.albumsCollection = account.borrow<&Albums.Collection{NonFungibleToken.Receiver}>(
+            from: Albums.CollectionStoragePath
+        ) ?? panic("Cannot borrow Albums collection receiver from account")
     }
 
     execute {
@@ -39,7 +39,7 @@ transaction(saleOfferResourceID: UInt64, storefrontAddress: Address) {
             payment: <-self.paymentVault
         )
 
-        self.kittyItemsCollection.deposit(token: <-item)
+        self.albumsCollection.deposit(token: <-item)
 
         self.storefront.cleanup(saleOfferResourceID: saleOfferResourceID)
     }

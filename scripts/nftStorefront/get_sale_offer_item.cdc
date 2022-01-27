@@ -1,6 +1,6 @@
 import NonFungibleToken from "../../contracts/NonFungibleToken.cdc"
 import NFTStorefront from "../../contracts/NFTStorefront.cdc"
-import KittyItems from "../../contracts/KittyItems.cdc"
+import Albums from "../../contracts/Albums.cdc"
 
 pub struct SaleItem {
     pub let itemID: UInt64
@@ -28,8 +28,8 @@ pub fun main(address: Address, saleOfferResourceID: UInt64): SaleItem? {
             let itemID = details.nftID
             let itemPrice = details.salePrice
 
-            if let collection = account.getCapability<&KittyItems.Collection{NonFungibleToken.CollectionPublic, KittyItems.KittyItemsCollectionPublic}>(KittyItems.CollectionPublicPath).borrow() {
-                if let item = collection.borrowKittyItem(id: itemID) {
+            if let collection = account.getCapability<&Albums.Collection{NonFungibleToken.CollectionPublic, Albums.AlbumsCollectionPublic}>(Albums.CollectionPublicPath).borrow() {
+                if let item = collection.borrowAlbum(id: itemID) {
                     return SaleItem(itemID: itemID, typeID: item.typeID, serialNo: item.serialNo, owner: address, price: itemPrice)
                 }
             }
