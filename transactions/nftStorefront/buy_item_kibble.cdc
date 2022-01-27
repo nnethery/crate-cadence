@@ -1,6 +1,6 @@
 import FungibleToken from "../../contracts/FungibleToken.cdc"
 import NonFungibleToken from "../../contracts/NonFungibleToken.cdc"
-import Kibble from "../../contracts/Kibble.cdc"
+import CrateUtilityCoin from "../../contracts/CrateUtilityCoin.cdc"
 import KittyItems from "../../contracts/KittyItems.cdc"
 import NFTStorefront from "../../contracts/NFTStorefront.cdc"
 
@@ -24,10 +24,10 @@ transaction(saleOfferResourceID: UInt64, storefrontAddress: Address) {
         
         let price = self.saleOffer.getDetails().salePrice
 
-        let mainKibbleVault = account.borrow<&Kibble.Vault>(from: Kibble.VaultStoragePath)
-            ?? panic("Cannot borrow Kibble vault from account storage")
+        let mainCrateUtilityCoinVault = account.borrow<&CrateUtilityCoin.Vault>(from: CrateUtilityCoin.VaultStoragePath)
+            ?? panic("Cannot borrow CrateUtilityCoin vault from account storage")
         
-        self.paymentVault <- mainKibbleVault.withdraw(amount: price)
+        self.paymentVault <- mainCrateUtilityCoinVault.withdraw(amount: price)
 
         self.kittyItemsCollection = account.borrow<&KittyItems.Collection{NonFungibleToken.Receiver}>(
             from: KittyItems.CollectionStoragePath
