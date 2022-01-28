@@ -1,0 +1,58 @@
+{
+    "emulators": {
+      "default": {
+        "port": 3569,
+        "serviceAccount": "emulator-account"
+      }
+    },
+    "devWallet": {
+      "accessNode": {
+        "endpoint": "http://localhost:8080"
+      },
+      "port": 8701
+    },
+    "contracts": {
+      "CrateUtilityCoin": "./contracts/CrateUtilityCoin.cdc",
+      "Albums": "./contracts/Albums.cdc",
+      "NonFungibleToken": {
+        "source": "./contracts/NonFungibleToken.cdc",
+        "aliases": {
+          "emulator": "0xf8d6e0586b0a20c7",
+          "testnet": "0x631e88ae7f1d7c20"
+        }
+      },
+      "NFTStorefront": "./contracts/NFTStorefront.cdc",
+      "FungibleToken": {
+        "source": "./contracts/FungibleToken.cdc",
+        "aliases": {
+          "emulator": "0xee82856bf20e2aa6",
+          "testnet": "0x9a0766d93b6608b7"
+        }
+      }
+    },
+    "networks": {
+      "emulator": "127.0.0.1:3569",
+      "testnet": "access.devnet.nodes.onflow.org:9000"
+    },
+    "accounts": {
+      "emulator-account": {
+        "address": "0xf8d6e0586b0a20c7",
+        "keys": "f8e188e8af0b8b414be59c4a1a15cc666c898fb34d94156e9b51e18bfde754a5"
+      },
+      "mock-user": {
+        "address": "0x77ca1b0465d40a56",
+        "keys": "39bf6121cf56096295d7d0219fa42ad68d3d745fadd408f998f50bb91cf846f5"
+      }
+    },
+    "deployments": {
+      "emulator": {
+        "emulator-account": [
+          "CrateUtilityCoin",
+          "Albums",
+          "NonFungibleToken",
+          "NFTStorefront"
+        ]
+      }
+    }
+  }
+  

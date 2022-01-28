@@ -1,0 +1,29 @@
+version: "3"
+services:
+  dev-wallet:
+    profiles:
+      - dev
+    image: ghcr.io/onflow/fcl-dev-wallet:latest
+    ports:
+      - "8701:8701"
+    environment:
+      - FLOW_ACCESS_NODE=${ACCESS_API_BACKEND}
+      - FLOW_ACCOUNT_ADDRESS=${FLOW_ADDRESS}
+      - FLOW_ACCOUNT_KEY_ID=0
+      - FLOW_ACCOUNT_PRIVATE_KEY=${FLOW_PRIVATE_KEY}
+      - FLOW_ACCOUNT_PUBLIC_KEY=${FLOW_PUBLIC_KEY}
+    depends_on:
+      - emulator
+  emulator:
+    profiles:
+      - dev
+      - api
+    image: gcr.io/flow-container-registry/emulator:v0.22.0
+    ports:
+      - "8080:8080"
+      - "3569:3569"
+    environment:
+      - FLOW_SERVICEPRIVATEKEY=${FLOW_PRIVATE_KEY}
+      - FLOW_SERVICEKEYSIGALGO=ECDSA_P256
+      - FLOW_SERVICEKEYHASHALGO=SHA3_256
+      - FLOW_VERBOSE=false
