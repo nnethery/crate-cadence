@@ -3,8 +3,8 @@ import path from "path";
 import { emulator, init, getAccountAddress, shallPass } from "flow-js-testing";
 
 import { toUFix64 } from "../src/common";
-import { mintKibble } from "../src/kibble";
-import { getKittyItemCount, mintKittyItem, getKittyItem, typeID1 } from "../src/kitty-items";
+import { mintCrateUtilityCoin } from "../src/crate-utlity-coin";
+import { getAlbumCount, mintAlbum, getAlbum, typeID1 } from "../src/albums";
 import {
 	deployNFTStorefront,
 	buyItem,
@@ -48,8 +48,10 @@ describe("NFT Storefront", () => {
 		const Alice = await getAccountAddress("Alice");
 		await setupStorefrontOnAccount(Alice);
 
+		const serialNo = '1';
+
 		// Mint KittyItem for Alice's account
-		await shallPass(mintKittyItem(typeID1, Alice));
+		await shallPass(mintAlbum(typeID1, serialNo, Alice));
 
 		const itemID = 0;
 
@@ -63,7 +65,8 @@ describe("NFT Storefront", () => {
 		// Setup seller account
 		const Alice = await getAccountAddress("Alice");
 		await setupStorefrontOnAccount(Alice);
-		await mintKittyItem(typeID1, Alice);
+		const serialNo = '1';
+		await mintAlbum(typeID1, serialNo, Alice);
 
 		const itemId = 0;
 
@@ -71,7 +74,7 @@ describe("NFT Storefront", () => {
 		const Bob = await getAccountAddress("Bob");
 		await setupStorefrontOnAccount(Bob);
 
-		await shallPass(mintKibble(Bob, toUFix64(100)));
+		await shallPass(mintCrateUtilityCoin(Bob, toUFix64(100)));
 
 		// Bob shall be able to buy from Alice
 		const sellItemTransactionResult = await shallPass(sellItem(Alice, itemId, toUFix64(1.11)));
@@ -81,7 +84,7 @@ describe("NFT Storefront", () => {
 
 		await shallPass(buyItem(Bob, saleOfferResourceID, Alice));
 
-		const itemCount = await getKittyItemCount(Bob);
+		const itemCount = await getAlbumCount(Bob);
 		expect(itemCount).toBe(1);
 
 		const offerCount = await getSaleOfferCount(Alice);
@@ -96,12 +99,14 @@ describe("NFT Storefront", () => {
 		const Alice = await getAccountAddress("Alice");
 		await shallPass(setupStorefrontOnAccount(Alice));
 
+		const serialNo = '1';
+
 		// Mint instruction shall pass
-		await shallPass(mintKittyItem(typeID1, Alice));
+		await shallPass(mintAlbum(typeID1, serialNo, Alice));
 
 		const itemId = 0;
 
-		const item = await getKittyItem(Alice, itemId);
+		const item = await getAlbum(Alice, itemId);
 
 		// Listing item for sale shall pass
 		const sellItemTransactionResult = await shallPass(sellItem(Alice, itemId, toUFix64(1.11)));
