@@ -1,16 +1,16 @@
 import { deployContractByName, executeScript, mintFlow, sendTransaction } from "flow-js-testing";
-import { getKittyAdminAddress } from "./common";
+import { getAdminAddress } from "./common";
 
 /*
  * Deploys Kibble contract to KittyAdmin.
  * @throws Will throw an error if transaction is reverted.
  * @returns {Promise<*>}
  * */
-export const deployKibble = async () => {
-	const KittyAdmin = await getKittyAdminAddress();
-	await mintFlow(KittyAdmin, "10.0");
+export const deployCrateUtilityCoin = async () => {
+	const Admin = await getAdminAddress();
+	await mintFlow(Admin, "10.0");
 
-	return deployContractByName({ to: KittyAdmin, name: "Kibble" });
+	return deployContractByName({ to: Admin, name: "CrateUtilityCoin" });
 };
 
 /*
@@ -19,8 +19,8 @@ export const deployKibble = async () => {
  * @throws Will throw an error if transaction is reverted.
  * @returns {Promise<*>}
  * */
-export const setupKibbleOnAccount = async (account) => {
-	const name = "kibble/setup_account";
+export const setupCrateUtilityCoinOnAccount = async (account) => {
+	const name = "crateUtilityCoin/setup_account"; // Note, name of the filepath of .cdc
 	const signers = [account];
 
 	return sendTransaction({ name, signers });
@@ -32,8 +32,8 @@ export const setupKibbleOnAccount = async (account) => {
  * @throws Will throw an error if execution will be halted
  * @returns {UFix64}
  * */
-export const getKibbleBalance = async (account) => {
-	const name = "kibble/get_balance";
+export const getCrateUtilityCoinBalance = async (account) => {
+	const name = "crateUtilityCoin/get_balance";
 	const args = [account];
 
 	return executeScript({ name, args });
@@ -44,8 +44,8 @@ export const getKibbleBalance = async (account) => {
  * @throws Will throw an error if execution will be halted
  * @returns {UFix64}
  * */
-export const getKibbleSupply = async () => {
-	const name = "kibble/get_supply";
+export const getCrateUtilityCoinSupply = async () => {
+	const name = "crateUtilityCoin/get_supply";
 	return executeScript({ name });
 };
 
@@ -56,12 +56,12 @@ export const getKibbleSupply = async () => {
  * @throws Will throw an error if transaction is reverted.
  * @returns {Promise<*>}
  * */
-export const mintKibble = async (recipient, amount) => {
-	const KittyAdmin = await getKittyAdminAddress();
+export const mintCrateUtilityCoin = async (recipient, amount) => {
+	const Admin = await getAdminAddress();
 
-	const name = "kibble/mint_tokens";
+	const name = "crateUtilityCoin/mint_tokens";
 	const args = [recipient, amount];
-	const signers = [KittyAdmin];
+	const signers = [Admin];
 
 	return sendTransaction({ name, args, signers });
 };
@@ -74,8 +74,8 @@ export const mintKibble = async (recipient, amount) => {
  * @throws Will throw an error if transaction is reverted.
  * @returns {Promise<*>}
  * */
-export const transferKibble = async (sender, recipient, amount) => {
-	const name = "kibble/transfer_tokens";
+export const transferCrateUtilityCoin = async (sender, recipient, amount) => {
+	const name = "crateUtilityCoin/transfer_tokens";
 	const args = [amount, recipient];
 	const signers = [sender];
 
