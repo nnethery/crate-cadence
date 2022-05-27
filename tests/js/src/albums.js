@@ -1,23 +1,23 @@
 import { deployContractByName, executeScript, mintFlow, sendTransaction } from "flow-js-testing";
 
-import { getKittyAdminAddress } from "./common";
+import { getAdminAddress } from "./common";
 
 // KittyItems types
-export const typeID1 = 1000;
+export const typeID1 = '1000';
 
 /*
  * Deploys NonFungibleToken and KittyItems contracts to KittyAdmin.
  * @throws Will throw an error if transaction is reverted.
  * @returns {Promise<*>}
  * */
-export const deployKittyItems = async () => {
-	const KittyAdmin = await getKittyAdminAddress();
-	await mintFlow(KittyAdmin, "10.0");
+export const deployAlbums = async () => {
+	const Admin = await getAdminAddress();
+	await mintFlow(Admin, "10.0");
 
-	await deployContractByName({ to: KittyAdmin, name: "NonFungibleToken" });
+	await deployContractByName({ to: Admin, name: "NonFungibleToken" });
 
-	const addressMap = { NonFungibleToken: KittyAdmin };
-	return deployContractByName({ to: KittyAdmin, name: "KittyItems", addressMap });
+	const addressMap = { NonFungibleToken: Admin };
+	return deployContractByName({ to: Admin, name: "Albums", addressMap });
 };
 
 /*
@@ -26,8 +26,8 @@ export const deployKittyItems = async () => {
  * @throws Will throw an error if transaction is reverted.
  * @returns {Promise<*>}
  * */
-export const setupKittyItemsOnAccount = async (account) => {
-	const name = "kittyItems/setup_account";
+export const setupAlbumsOnAccount = async (account) => {
+	const name = "albums/setup_account";
 	const signers = [account];
 
 	return sendTransaction({ name, signers });
@@ -38,8 +38,8 @@ export const setupKittyItemsOnAccount = async (account) => {
  * @throws Will throw an error if execution will be halted
  * @returns {UInt64} - number of NFT minted so far
  * */
-export const getKittyItemSupply = async () => {
-	const name = "kittyItems/get_kitty_items_supply";
+export const getAlbumSupply = async () => {
+	const name = "albums/get_albums_supply";
 
 	return executeScript({ name });
 };
@@ -51,12 +51,12 @@ export const getKittyItemSupply = async () => {
  * @throws Will throw an error if execution will be halted
  * @returns {Promise<*>}
  * */
-export const mintKittyItem = async (itemType, recipient) => {
-	const KittyAdmin = await getKittyAdminAddress();
+export const mintAlbum = async (itemType, serialNo, recipient) => {
+	const Admin = await getAdminAddress();
 
-	const name = "kittyItems/mint_kitty_item";
-	const args = [recipient, itemType];
-	const signers = [KittyAdmin];
+	const name = "albums/mint_album";
+	const args = [recipient, itemType, serialNo];
+	const signers = [Admin];
 
 	return sendTransaction({ name, args, signers });
 };
@@ -69,8 +69,8 @@ export const mintKittyItem = async (itemType, recipient) => {
  * @throws Will throw an error if execution will be halted
  * @returns {Promise<*>}
  * */
-export const transferKittyItem = async (sender, recipient, itemId) => {
-	const name = "kittyItems/transfer_kitty_item";
+export const transferAlbum = async (sender, recipient, itemId) => {
+	const name = "albums/transfer_album";
 	const args = [recipient, itemId];
 	const signers = [sender];
 
@@ -84,8 +84,8 @@ export const transferKittyItem = async (sender, recipient, itemId) => {
  * @throws Will throw an error if execution will be halted
  * @returns {UInt64}
  * */
-export const getKittyItem = async (account, itemID) => {
-	const name = "kittyItems/get_kitty_item";
+export const getAlbum = async (account, itemID) => {
+	const name = "albums/get_album";
 	const args = [account, itemID];
 
 	return executeScript({ name, args });
@@ -97,8 +97,8 @@ export const getKittyItem = async (account, itemID) => {
  * @throws Will throw an error if execution will be halted
  * @returns {UInt64}
  * */
-export const getKittyItemCount = async (account) => {
-	const name = "kittyItems/get_collection_length";
+export const getAlbumCount = async (account) => {
+	const name = "albums/get_collection_length";
 	const args = [account];
 
 	return executeScript({ name, args });
